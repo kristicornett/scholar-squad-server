@@ -15,8 +15,24 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
+from django.conf.urls import include
 from django.urls import path
+from scholarsquadapi.views import register_user, login_user
+from rest_framework import routers
+from scholarsquadapi.views import SchoolView, AnswerView, QuestionView, QuizView, SchoolClassView, StudentView, TeacherView, UserView
+
+router = routers.DefaultRouter(trailing_slash=False)
+router.register(r'schools', SchoolView, 'school')
+router.register(r'teachers', TeacherView, 'teacher')
+router.register(r'students', StudentView, 'student')
+router.register(r'quiz', QuizView, 'quizzes')
+router.register(r'answers', AnswerView, 'answer')
+router.register(r'classes', SchoolClassView, 'class')
 
 urlpatterns = [
+    path('register', register_user),
+    path('login', login_user),
     path('admin/', admin.site.urls),
+    path('', include(router.urls)),
+
 ]

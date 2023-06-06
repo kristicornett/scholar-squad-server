@@ -1,0 +1,72 @@
+[
+    {
+        "model": "scholarsquadapi.school", 
+        "pk": 1,
+        "fields": {
+            "name": "Portland High School"
+        }
+    },
+    {
+        "model": "scholarsquadapi.school", 
+        "pk": 2,
+        "fields": {
+            "name": "Portland East Middle School"
+        }
+    },
+    {
+        "model": "scholarsquadapi.school", 
+        "pk": 3,
+        "fields": {
+            "name": "Portland West Middle School"
+        }
+    },
+    {
+        "model": "scholarsquadapi.school", 
+        "pk": 4,
+        "fields": {
+            "name": "Beech High School"
+        }
+    },
+    {
+        "model": "scholarsquadapi.school", 
+        "pk": 5,
+        "fields": {
+            "name": "Hendersonville High School"
+        }
+    },
+    {
+        "model": "scholarsquadapi.school", 
+        "pk": 6,
+        "fields": {
+            "name": "T.W. Hunter"
+        }
+    },
+    {
+        "model": "scholarsquadapi.school", 
+        "pk": 7,
+        "fields": {
+            "name": "Liberty Creek High School"
+        }
+    },
+    {
+        "model": "scholarsquadapi.school", 
+        "pk": 8,
+        "fields": {
+            "name": "Gallatin High School"
+        }
+    },
+    {
+        "model": "scholarsquadapi.school", 
+        "pk": 9,
+        "fields": {
+            "name": "Station Camp High School"
+        }
+    },
+    {
+        "model": "scholarsquadapi.school", 
+        "pk": 10,
+        "fields": {
+            "name": "White House High School"
+        }
+    }
+]

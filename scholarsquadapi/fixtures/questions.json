@@ -1,0 +1,12 @@
+[
+    {
+        "model": "scholarsquadapi.question",
+        "pk": 1,
+        "fields": {
+            "question": "If Marsha expects her students to use the ________ map to find the treasure hidden in the classroom, she will need to provide them with a few more clues",
+            "quiz": 1
+        }
+    }
+]
+
+

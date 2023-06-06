@@ -1,0 +1,39 @@
+[
+    {
+        "model": "scholarsquadapi.answer",
+        "pk": 1,
+        "fields": {
+            "question": 1,
+            "answer": "lavish",
+            "isCorrect": false
+        }
+    },
+    {
+        "model": "scholarsquadapi.answer",
+        "pk": 2,
+        "fields": {
+            "question": 1,
+            "answer": "poignant",
+            "isCorrect": false
+        }
+    },
+    {
+        "model": "scholarsquadapi.answer",
+        "pk": 3,
+        "fields": {
+            "question": 1,
+            "answer": "tedious",
+            "isCorrect": false
+        }
+    },
+    {
+        "model": "scholarsquadapi.answer",
+        "pk": 4,
+        "fields": {
+            "question": 1,
+            "answer": "crytpic",
+            "isCorrect": true
+        }
+    }
+]
+

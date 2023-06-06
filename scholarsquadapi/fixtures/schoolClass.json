@@ -1,0 +1,11 @@
+[
+    {
+        "model": "scholarsquadapi.schoolClass",
+        "pk": 1,
+        "fields": {
+            "name": "ELA",
+            "school": 1,
+            "teacher": 1
+        }
+    }
+]

@@ -1,0 +1,13 @@
+[
+    {
+        "model": "scholarsquadapi.studentAnswer",
+        "pk": 1,
+        "fields": {
+            "quiz": 1,
+            "student_quiz": 1,
+            "answer": 4,
+            "question": 1
+        }
+    }
+]
+
