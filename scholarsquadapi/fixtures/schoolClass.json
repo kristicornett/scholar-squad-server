@@ -5,7 +5,16 @@
         "fields": {
             "name": "ELA",
             "school": 1,
-            "teacher": 1
+            "teacher": 8
+        }
+    },
+    {
+        "model": "scholarsquadapi.schoolClass",
+        "pk": 2,
+        "fields": {
+            "name": "History",
+            "school": 1,
+            "teacher": 8
         }
     }
 ]

@@ -14,7 +14,7 @@ from scholarsquadapi.models import Teacher, Student, School
 def login_user(request):
     """Handles the authentication of user"""
 
-    email = request.data['email']
+    email = request.data['username']
     password = request.data['password']
 
     authenticated_user = authenticate(username=email, password=password)

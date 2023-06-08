@@ -21,3 +21,4 @@ class TeacherSerializer(serializers.ModelSerializer):
     class Meta:
         model = Teacher
         fields = ('id', 'user', 'school', 'schoolClass', 'full_name')
+        depth = 1

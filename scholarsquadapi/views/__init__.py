@@ -7,3 +7,4 @@ from .student_view import StudentView
 from .teacher_view import TeacherView
 from .user_view import UserView
 from .schoolClass_view import SchoolClassView
+from .scholarAI_view import ScholarAI

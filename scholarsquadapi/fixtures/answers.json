@@ -31,7 +31,7 @@
         "pk": 4,
         "fields": {
             "question": 1,
-            "answer": "crytpic",
+            "answer": "cryptic",
             "isCorrect": true
         }
     }
