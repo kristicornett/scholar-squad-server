@@ -8,6 +8,11 @@ class QuizView(ViewSet):
 
     def list(self, request):
         questions = Quiz.objects.all()
+        teacher = Teacher.objects.get(user=request.auth.user)
+        test_giver = request.query_params.get('_user', None)
+
+        if test_giver is not None:
+            questions = questions.filter(teacher_id=teacher.id)
         serialized = QuizSerializer(questions)
         return Response(serialized.data, status=status.HTTP_200_OK)
     
@@ -26,6 +31,7 @@ class QuizView(ViewSet):
     
     def update(self, request, pk):
         quiz = Quiz.objects.get(pk=pk)
+        quiz.title = request.data['title']
         quiz.created_by = Teacher.objects.get(pk=request.data['created_by'])
         quiz.student = Student.objects.get(pk=request.data['student'])
         quiz.description = request.data['description']
@@ -48,13 +54,14 @@ class QuizView(ViewSet):
 class QuizSerializer(serializers.ModelSerializer):
     class Meta:
         model = Quiz
-        fields = ('id', 'created_by', 'student', 'description', 'question', 'answer', 'start_date', 'expire_date')
+        fields = ('id', 'title', 'created_by', 'student', 'description', 'question', 'answer', 'start_date', 'expire_date')
 
 class CreateQuizSerializer(serializers.ModelSerializer):
     class Meta:
         model = Quiz
         fields = (
             'id',
+            'title',
             'created_by',
             'student',
             'description',
@@ -63,3 +70,4 @@ class CreateQuizSerializer(serializers.ModelSerializer):
             'start_date',
             'expire_date'
         )
+        depth = 1

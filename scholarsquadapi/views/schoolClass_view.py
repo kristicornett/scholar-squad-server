@@ -5,6 +5,7 @@ from rest_framework import serializers, status
 from scholarsquadapi.models import SchoolClass
 
 class SchoolClassView(ViewSet):
+    
     def list(self, request):
 
         schoolClass = SchoolClass.objects.all()

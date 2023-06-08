@@ -8,3 +8,4 @@ from .teacher_view import TeacherView
 from .user_view import UserView
 from .schoolClass_view import SchoolClassView
 from .scholarAI_view import ScholarAI
+from .publicSchool_view import getAllSchools

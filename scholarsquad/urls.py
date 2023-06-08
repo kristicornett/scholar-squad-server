@@ -19,7 +19,7 @@ from django.conf.urls import include
 from django.urls import path
 from scholarsquadapi.views import register_user, login_user
 from rest_framework import routers
-from scholarsquadapi.views import SchoolView, AnswerView, QuestionView, QuizView, SchoolClassView, StudentView, TeacherView, UserView
+from scholarsquadapi.views import SchoolView, AnswerView, QuestionView, QuizView, SchoolClassView, StudentView, TeacherView, UserView, getAllSchools
 
 router = routers.DefaultRouter(trailing_slash=False)
 router.register(r'schools', SchoolView, 'school')
@@ -28,11 +28,13 @@ router.register(r'students', StudentView, 'student')
 router.register(r'quiz', QuizView, 'quizzes')
 router.register(r'answers', AnswerView, 'answer')
 router.register(r'classes', SchoolClassView, 'class')
+router.register(r'my_quizzes', QuizView, 'my_quiz')
 
 urlpatterns = [
     path('register', register_user),
     path('login', login_user),
     path('admin/', admin.site.urls),
     path('', include(router.urls)),
+    path('registerschool', getAllSchools)
 
 ]

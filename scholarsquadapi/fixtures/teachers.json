@@ -5,7 +5,7 @@
         "fields": {
             "user": 1,
             "school": [1],
-            "schoolClass": 1
+            "schoolClass": 2
         }
 
     },
@@ -18,5 +18,14 @@
             "schoolClass": 2
         }
 
+    },
+    {
+        "model": "scholarsquadapi.teacher",
+        "pk": 3,
+        "fields": {
+            "user": 10,
+            "school": [1],
+            "schoolClass": 1
+        }
     }
 ]

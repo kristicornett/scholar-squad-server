@@ -5,7 +5,7 @@
         "fields": {
             "name": "ELA",
             "school": 1,
-            "teacher": 8
+            "teacher": 1
         }
     },
     {
@@ -14,7 +14,7 @@
         "fields": {
             "name": "History",
             "school": 1,
-            "teacher": 8
+            "teacher": 1
         }
     }
 ]

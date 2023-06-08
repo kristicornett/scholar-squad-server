@@ -25,7 +25,10 @@ def login_user(request):
         data = {
             'valid': True,
             'token': token.key,
-            'staff': authenticated_user.is_staff
+            'user': {
+                'isStaff': authenticated_user.is_staff,
+                'id': authenticated_user.id
+            }
         }
         return Response(data)
     

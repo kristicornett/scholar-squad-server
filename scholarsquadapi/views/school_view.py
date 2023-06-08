@@ -3,11 +3,13 @@ from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from rest_framework import serializers, status
 from scholarsquadapi.models import School
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import AllowAny
 
 
 class SchoolView(ViewSet):
     """ScholarSquad school view"""
-
+    
     def list(self, request):
         """Handles GET requests for schools"""
 
@@ -55,3 +57,4 @@ class CreateSchoolSerializer(serializers.ModelSerializer):
     class Meta:
         model = School
         fields = ['id', 'name']
+
