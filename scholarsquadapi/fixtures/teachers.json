@@ -15,7 +15,7 @@
         "fields": {
             "user": 8,
             "school": [1],
-            "schoolClass": 2
+            "classroom": 2
         }
 
     },
@@ -25,7 +25,7 @@
         "fields": {
             "user": 10,
             "school": [1],
-            "schoolClass": 1
+            "classroom": 1
         }
     }
 ]

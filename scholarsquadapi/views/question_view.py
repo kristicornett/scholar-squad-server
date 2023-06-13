@@ -8,7 +8,7 @@ class QuestionView(ViewSet):
 
     def list(self, request):
         questions = Question.objects.all()
-        serialized = QuestionSerializer(questions)
+        serialized = QuestionSerializer(questions, many=True)
         return Response(serialized.data, status=status.HTTP_200_OK)
     
     def retrieve(self, request, pk=None):

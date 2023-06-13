@@ -7,8 +7,12 @@ from scholarsquadapi.models import Student
 
 class StudentView(ViewSet):
     def list(self, request):
+        school_id = request.query_params.get("school_id")
+        if (school_id is not None):
+            students = Student.objects.filter(school=school_id)
+        else:
+            students = Student.objects.all()
 
-        students = Student.objects.all()
         serialized = StudentSerializer(students, many=True)
         return Response(serialized.data, status=status.HTTP_200_OK)
     
@@ -24,5 +28,5 @@ class StudentView(ViewSet):
 class StudentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Student
-        fields = ('id', 'user', 'school', 'grade')
+        fields = ('id', 'user', 'school', 'grade', 'full_name')
         depth = 1

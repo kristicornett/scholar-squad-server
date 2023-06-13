@@ -5,10 +5,7 @@
         "fields": {
             "title": "Week 1 test prep",
             "created_by": 1,
-            "student": 1,
             "description": "This week you will be working on vocab from the summer reading",
-            "question": 1,
-            "answer": 4,
             "start_date": "2023-06-06",
             "expire_date": "2023-06-15"
         }

@@ -2,7 +2,7 @@ from .answer import Answer
 from .question import Question
 from .quiz import Quiz
 from .school import School
-from .schoolClass import SchoolClass 
+from .schoolClass import Classroom 
 from .student import Student
 from .studentAnswer import StudentAnswer
 from .studentQuiz import StudentQuiz

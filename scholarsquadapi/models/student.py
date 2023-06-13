@@ -3,8 +3,9 @@ from django.contrib.auth.models import User
 
 class Student(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    school = models.ManyToManyField('School', related_name='student_schools')
+    school = models.ForeignKey('School', on_delete=models.CASCADE, related_name='students', null=True, blank=True)
     grade = models.IntegerField(blank=True, null=True)
+    classroom = models.ForeignKey('Classroom', on_delete=models.CASCADE, related_name='students', null=True, blank=True)
 
     @property
     def full_name(self):

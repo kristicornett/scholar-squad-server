@@ -3,17 +3,19 @@ from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from rest_framework import serializers, status
 from scholarsquadapi.models import Quiz, Teacher, Student, Question, Answer
+from django.contrib.auth.models import User
 
 class QuizView(ViewSet):
 
     def list(self, request):
-        questions = Quiz.objects.all()
-        teacher = Teacher.objects.get(user=request.auth.user)
-        test_giver = request.query_params.get('_user', None)
-
-        if test_giver is not None:
-            questions = questions.filter(teacher_id=teacher.id)
-        serialized = QuizSerializer(questions)
+        teacher_id = request.query_params.get("teacher_id")
+        if (teacher_id is not None):
+            quizzes = Quiz.objects.filter(created_by=teacher_id)
+        else:
+            quizzes = Quiz.objects.all()
+       
+      
+        serialized = QuizSerializer(quizzes, many=True)
         return Response(serialized.data, status=status.HTTP_200_OK)
     
     def retrieve(self, request, pk=None):
@@ -23,20 +25,42 @@ class QuizView(ViewSet):
         return Response(serialized.data, status=status.HTTP_200_OK)
     
     def create(self, request):
+        questions = request.data['questions']
         created_by = Teacher.objects.get(user=request.auth.user)
-        serializer = CreateQuizSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save(created_by=created_by)
+        quiz = Quiz.objects.create(
+            title=request.data['title'],
+            created_by=created_by,
+            description=request.data['description'],
+            start_date=request.data['start_date'],
+            expire_date=request.data['expire_date']
+            
+
+        )
+        for question in questions:
+            newQuestion = Question.objects.create(
+                question = question['question'],
+                quiz = quiz
+            )
+            
+            correctAnswer = question['correctAnswer']
+            allAnswers = question['answers']
+            for a in allAnswers:
+               
+                Answer.objects.create(
+                    answer=a,
+                    isCorrect = (a == correctAnswer),
+                    question = newQuestion
+                )
+
+        serializer = CreateQuizSerializer(quiz)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+
     
     def update(self, request, pk):
         quiz = Quiz.objects.get(pk=pk)
         quiz.title = request.data['title']
         quiz.created_by = Teacher.objects.get(pk=request.data['created_by'])
-        quiz.student = Student.objects.get(pk=request.data['student'])
         quiz.description = request.data['description']
-        quiz.question = Question.objects.get(pk=request.data['question'])
-        quiz.answer = Answer.objects.get(pk=request.data['answer'])
         quiz.start_date = request.data['start_date']
         quiz.expire_date = request.data['expire_date']
         quiz.save()
@@ -48,13 +72,22 @@ class QuizView(ViewSet):
         return Response(None, status=status.HTTP_204_NO_CONTENT)
 
         
+class AnswerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Answer
+        fields = ('id', 'isCorrect', 'answer')
 
-
+class QuestionSerializer(serializers.ModelSerializer):
+    answers = AnswerSerializer(many=True)
+    class Meta:
+        model = Question
+        fields = ('id', 'question', 'answers')
 
 class QuizSerializer(serializers.ModelSerializer):
+    questions = QuestionSerializer(many=True)
     class Meta:
         model = Quiz
-        fields = ('id', 'title', 'created_by', 'student', 'description', 'question', 'answer', 'start_date', 'expire_date')
+        fields = ('id', 'title', 'created_by', 'description', 'start_date', 'expire_date', 'questions')
 
 class CreateQuizSerializer(serializers.ModelSerializer):
     class Meta:
@@ -63,10 +96,7 @@ class CreateQuizSerializer(serializers.ModelSerializer):
             'id',
             'title',
             'created_by',
-            'student',
             'description',
-            'question',
-            'answer',
             'start_date',
             'expire_date'
         )

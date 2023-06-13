@@ -3,19 +3,27 @@ from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from rest_framework import serializers, status
 from scholarsquadapi.models import Student, Teacher
+from django.contrib.auth.models import User
 
 class UserView(ViewSet):
-    def list(self, request):
+     def create(self, request):
+        user = User.objects.create(
+            first_name=request.data['first_name'],
+            last_name=request.data['last_name'],
+            email=request.data['email'],
+            password=request.data['password']
 
-        teachers = Teacher.objects.all()
-        serialized = TeacherSerializer(teachers)
-        return Response(serialized.data, status=status.HTTP_200_OK)
+        )
+        serializer = UserSerializer(user=user)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
     
 
 
-class TeacherSerializer(serializers.ModelSerializer):
+class UserSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Teacher
-        fields = ('id', 'user', 'school', 'schoolClass', 'full_name')
+        model = User
+        fields = ('id', 'first_name', 'last_name', 'email', 'password')
 
 

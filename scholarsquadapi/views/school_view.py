@@ -29,11 +29,9 @@ class SchoolView(ViewSet):
 
     def create(self, request):
         """Handles Post"""
-
-        school = School.objects.get(user=request.auth.user)
         serializer = CreateSchoolSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        serializer.save(school=school)
+        serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     
     def update(self, request, pk):

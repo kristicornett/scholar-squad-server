@@ -1,6 +1,6 @@
 [
     {
-        "model": "scholarsquadapi.schoolClass",
+        "model": "scholarsquadapi.classroom",
         "pk": 1,
         "fields": {
             "name": "ELA",
@@ -9,7 +9,7 @@
         }
     },
     {
-        "model": "scholarsquadapi.schoolClass",
+        "model": "scholarsquadapi.classroom",
         "pk": 2,
         "fields": {
             "name": "History",

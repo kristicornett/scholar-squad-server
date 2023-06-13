@@ -7,5 +7,14 @@
             "school": [1],
             "grade": 10
         }
+    },
+    {
+        "model": "scholarsquadapi.student",
+        "pk": 1,
+        "fields": {
+            "user": 12,
+            "school": [2],
+            "grade": 11
+        }
     }
 ]
