@@ -6,6 +6,11 @@ from scholarsquadapi.models import Student, Teacher
 from django.contrib.auth.models import User
 
 class UserView(ViewSet):
+     def list(self, request):
+        users = User.objects.all()
+        serializer = UserSerializer(users, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+     
      def create(self, request):
         user = User.objects.create(
             first_name=request.data['first_name'],
@@ -18,6 +23,7 @@ class UserView(ViewSet):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+    
     
 
 

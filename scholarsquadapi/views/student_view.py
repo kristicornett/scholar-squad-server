@@ -24,9 +24,21 @@ class StudentView(ViewSet):
         except Student.DoesNotExist:
             return Response({"message": "Student not found"},
                             status=status.HTTP_404_NOT_FOUND)
+    
+    def create(self, request):
+        """Handles Post"""
+        serializer = CreateStudentSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 class StudentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Student
         fields = ('id', 'user', 'school', 'grade', 'full_name')
         depth = 1
+
+class CreateStudentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Student
+        fields = ['id', 'user', 'school', 'grade', 'full_name']

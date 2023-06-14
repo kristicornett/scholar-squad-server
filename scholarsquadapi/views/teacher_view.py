@@ -21,18 +21,28 @@ class TeacherView(ViewSet):
         serialized= TeacherSerializer(teacher)
         return Response(serialized.data, status=status.HTTP_200_OK)
     
+
+    
     def create(self, request):
+        username = request.data['email']
+        if User.objects.filter(username=username).exists():
+            return Response({'error': 'Username already exists.'}, status=status.HTTP_400_BAD_REQUEST)
+
         user = User.objects.create(
             first_name=request.data['first_name'],
             last_name=request.data['last_name'],
+            username=request.data['email'],
             email=request.data['email'],
-            password= request.data['password']
+            password= request.data['password'],
+            is_staff = True
 
         )
-        serializer = UserSerializer(user=user)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
+        teacher = Teacher.objects.create(
+            user = user
+        )
+        serializer = TeacherSerializer(teacher)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+
     
     def destroy(self, request, pk):
         teacher = Teacher.objects.get(pk=pk)
@@ -41,8 +51,13 @@ class TeacherView(ViewSet):
 
         
 
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('id', 'first_name', 'last_name', 'password', 'is_staff')
 
 class TeacherSerializer(serializers.ModelSerializer):
+    user = UserSerializer(many=False)
     class Meta:
         model = Teacher
         fields = ('id', 'user', 'school', 'classroom', 'full_name')
@@ -51,9 +66,5 @@ class TeacherSerializer(serializers.ModelSerializer):
 class CreateTeacherSerializer(serializers.ModelSerializer):
     class Meta:
         model = Teacher
-        fields = ('id', 'user', 'full_name')
+        fields = ('id', 'full_name', 'user')
 
-class UserSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = ('id', 'first_name', 'last_name', 'password')

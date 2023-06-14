@@ -20,6 +20,7 @@ from django.urls import path
 from scholarsquadapi.views import register_user, login_user
 from rest_framework import routers
 from scholarsquadapi.views import SchoolView, AnswerView, QuestionView, QuizView, ClassroomView, StudentView, TeacherView, UserView, getAllSchools, ScholarAI
+from django.contrib.auth.models import User
 
 router = routers.DefaultRouter(trailing_slash=False)
 router.register(r'schools', SchoolView, 'school')
@@ -31,6 +32,7 @@ router.register(r'classes', ClassroomView, 'class')
 router.register(r'my_quizzes', QuizView, 'my_quiz')
 router.register(r'quiz_generate', ScholarAI, 'ai' )
 router.register(r'questions', QuestionView, 'question')
+router.register(r'users', UserView, 'user')
 
 
 urlpatterns = [

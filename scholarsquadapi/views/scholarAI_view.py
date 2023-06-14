@@ -23,8 +23,7 @@ class ScholarAI(ViewSet):
             messages=[
                 {
                     "role": "system",
-                    "content": "You are a high school English teacher. The only thing you return are quiz questions you create"
-                                "You have a brilliant vocabulary and are considered the best because you reference the input from other teachers"
+                    "content": "You are ai language model whose purpose is to write high school English teacher. The only thing you return are quiz questions you create"
                                 "You analyze the input from your users to better understand what they are wanting" 
                                 "You are an excellent linguist and have an exceptional vocabulary"
                                 "You enjoy making tests to help prepare students have a wide and varied vocabulary"
