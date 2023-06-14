@@ -2,7 +2,7 @@ from django.http import HttpResponseServerError
 from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from rest_framework import serializers, status
-from scholarsquadapi.models import Teacher
+from scholarsquadapi.models import Teacher, Classroom, School
 from django.contrib.auth.models import User
 
 class TeacherView(ViewSet):
@@ -42,6 +42,29 @@ class TeacherView(ViewSet):
         )
         serializer = TeacherSerializer(teacher)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+    
+    def update(self, request, pk):
+        try:
+            teacher = Teacher.objects.get(pk=pk)
+            user = User.objects.get(pk=teacher.user.id)
+            user.first_name = request.data['first_name']
+            user.last_name = request.data['last_name']
+            user.email = request.data['email']
+            user.save()
+            school = School.objects.get(pk=request.data['school'])
+            teacher.school = school
+            teacher.save()
+        
+            return Response(None, status=status.HTTP_204_NO_CONTENT)
+        except User.DoesNotExist:
+           return Response("User not found.", status=status.HTTP_404_NOT_FOUND)
+
+        except School.DoesNotExist:
+            return Response("School not found.", status=status.HTTP_404_NOT_FOUND)
+
+        except Teacher.DoesNotExist:
+            return Response("Teacher not found.", status=status.HTTP_404_NOT_FOUND)
+
 
     
     def destroy(self, request, pk):
