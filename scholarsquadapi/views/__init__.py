@@ -6,6 +6,6 @@ from .quiz_view import QuizView
 from .student_view import StudentView
 from .teacher_view import TeacherView
 from .user_view import UserView
-from .schoolClass_view import ClassroomView
+from .classroom_view import ClassroomView
 from .scholarAI_view import ScholarAI
 from .publicSchool_view import getAllSchools

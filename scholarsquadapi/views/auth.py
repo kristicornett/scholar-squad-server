@@ -16,18 +16,25 @@ def login_user(request):
 
     email = request.data['username']
     password = request.data['password']
-
+    teacher_id = None
     authenticated_user = authenticate(username=email, password=password)
 
     if authenticated_user is not None:
         token = Token.objects.get(user=authenticated_user)
+
+        if(authenticated_user.is_staff):
+            teacher = Teacher.objects.get(user_id = authenticated_user.id)
+            if(teacher is not None):
+                teacher_id = teacher.id
 
         data = {
             'valid': True,
             'token': token.key,
             'user': {
                 'isStaff': authenticated_user.is_staff,
-                'id': authenticated_user.id
+                'id': authenticated_user.id,
+                'isAdmin': authenticated_user.is_superuser,
+                'teacherId': teacher_id
             }
         }
         return Response(data)
@@ -113,8 +120,8 @@ def register_user(request):
             )
             school_name = request.data['school']
             schoolObject = School.objects.filter(name=school_name).first()
-            if schoolObject is not None:
-                account.school.set([schoolObject])
+           # if schoolObject is not None:
+               # account.school.set(schoolObject)
         elif account_type == 'teacher':
             new_user.is_staff = True
             new_user.save()
@@ -122,8 +129,8 @@ def register_user(request):
             account = Teacher.objects.create(user=new_user)
             school_name = request.data['school']
             schoolObject = School.objects.filter(name=school_name).first()
-            if schoolObject is not None:
-                account.school.set([schoolObject])
+           # if schoolObject is not None:
+              #  account.school.set(schoolObject)
         token = Token.objects.create(user=account.user)
         data = { 'token': token.key, 'staff': new_user.is_staff }
         return Response(data)

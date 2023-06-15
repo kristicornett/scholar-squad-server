@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from rest_framework import serializers, status
 from scholarsquadapi.models import Teacher, Classroom, School
 from django.contrib.auth.models import User
+from rest_framework.decorators import action
 
 class TeacherView(ViewSet):
     def list(self, request):
@@ -42,7 +43,7 @@ class TeacherView(ViewSet):
         )
         serializer = TeacherSerializer(teacher)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
-    
+
     def update(self, request, pk):
         try:
             teacher = Teacher.objects.get(pk=pk)
@@ -54,7 +55,7 @@ class TeacherView(ViewSet):
             school = School.objects.get(pk=request.data['school'])
             teacher.school = school
             teacher.save()
-        
+
             return Response(None, status=status.HTTP_204_NO_CONTENT)
         except User.DoesNotExist:
            return Response("User not found.", status=status.HTTP_404_NOT_FOUND)
@@ -64,8 +65,12 @@ class TeacherView(ViewSet):
 
         except Teacher.DoesNotExist:
             return Response("Teacher not found.", status=status.HTTP_404_NOT_FOUND)
-
-
+        
+    @action(methods=['GET'], detail=True, url_path='classrooms')
+    def getClassrooms(self, request, pk):
+        classrooms = Classroom.objects.filter(teacher_id=pk)
+        serializer = TeacherClassroomSerializer(classrooms, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
     
     def destroy(self, request, pk):
         teacher = Teacher.objects.get(pk=pk)
@@ -91,3 +96,9 @@ class CreateTeacherSerializer(serializers.ModelSerializer):
         model = Teacher
         fields = ('id', 'full_name', 'user')
 
+class TeacherClassroomSerializer(serializers.ModelSerializer):
+    teacher = TeacherSerializer(many=False)
+    class Meta:
+        model = Classroom
+        fields = ['id', 'name', 'school', 'teacher', 'students']
+        depth = 1

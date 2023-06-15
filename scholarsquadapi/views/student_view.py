@@ -39,14 +39,17 @@ class StudentView(ViewSet):
             email=request.data['email'],
             password= request.data['password'],
             is_staff = False
-
         )
+
+        school = School.objects.get(pk=request.data['school'])
+
         teacher = Student.objects.create(
-            user = user
+            user = user,
+            school = school
         )
         serializer = StudentSerializer(teacher)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
-    
+
     def update(self, request, pk):
         try:
             student = Student.objects.get(pk=pk)
@@ -59,7 +62,7 @@ class StudentView(ViewSet):
             student.school = school
             student.grade = request.data.get('grade', student.grade)
             student.save()
-        
+
             return Response(None, status=status.HTTP_204_NO_CONTENT)
         except User.DoesNotExist:
             return Response("User not found.", status=status.HTTP_404_NOT_FOUND)
