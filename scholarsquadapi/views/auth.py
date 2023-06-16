@@ -111,28 +111,39 @@ def register_user(request):
             )
         
         account = None
-
+        teacher_id = None
         if account_type == 'student':
             account = Student.objects.create(
                 grade=request.data['grade'],
                 user=new_user
-
             )
-            school_name = request.data['school']
-            schoolObject = School.objects.filter(name=school_name).first()
-           # if schoolObject is not None:
-               # account.school.set(schoolObject)
+
         elif account_type == 'teacher':
             new_user.is_staff = True
             new_user.save()
-
             account = Teacher.objects.create(user=new_user)
-            school_name = request.data['school']
-            schoolObject = School.objects.filter(name=school_name).first()
-           # if schoolObject is not None:
-              #  account.school.set(schoolObject)
+            teacher_id = account.id
+            
+        school_name = request.data['school']
+        schoolObject = School.objects.filter(name=school_name).first()
+
+        if schoolObject is not None:
+            account.school = schoolObject
+            account.save()
+
         token = Token.objects.create(user=account.user)
-        data = { 'token': token.key, 'staff': new_user.is_staff }
+
+        data = {
+            'valid': True,
+            'token': token.key,
+            'user': {
+                'isStaff': new_user.is_staff,
+                'id': new_user.id,
+                'isAdmin': new_user.is_superuser,
+                'teacherId': teacher_id
+            }
+        }
+
         return Response(data)
     
     return Response({'message': 'You must provide email, password, first_name, last_name, school, and account_type' }, status=status.HTTP_400_BAD_REQUEST)

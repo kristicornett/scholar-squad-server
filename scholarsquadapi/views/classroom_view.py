@@ -49,7 +49,7 @@ class ClassroomView(ViewSet):
         classroom.delete()
         return Response(None, status=status.HTTP_204_NO_CONTENT)
 
-    @action(methods=['post'], detail=True)
+    @action(methods=['post'], detail=True, url_path='students')
     def add_student(self, request, pk):
         try: 
             classroom = Classroom.objects.get(pk=pk)
@@ -57,12 +57,26 @@ class ClassroomView(ViewSet):
             student = Student.objects.get(pk=studentId)
 
             classroom.students.add(student)
+            classroom.save()
             return Response(None, status=status.HTTP_200_OK)
         except Classroom.DoesNotExist:
             return Response("Classroom not found.", status=status.HTTP_404_NOT_FOUND)
 
         except Student.DoesNotExist:
             return Response("Student not found.", status=status.HTTP_404_NOT_FOUND)
+    
+    @action(methods=['get'], detail=True)
+    def get_students(self, request, pk):
+        try:
+            classroom = Classroom.objects.get(pk=pk)
+            serialized = StudentSerializer(classroom.students, many=True)
+            return Response(serialized.data, status=status.HTTP_200_OK)
+        
+        except Classroom.DoesNotExist:
+            return Response("Classroom not found.", status=status.HTTP_404_NOT_FOUND)
+
+       
+            
     
 
 class StudentSerializer(serializers.ModelSerializer):

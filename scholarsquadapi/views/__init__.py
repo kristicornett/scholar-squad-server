@@ -9,3 +9,5 @@ from .user_view import UserView
 from .classroom_view import ClassroomView
 from .scholarAI_view import ScholarAI
 from .publicSchool_view import getAllSchools
+
+

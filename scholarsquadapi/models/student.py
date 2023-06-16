@@ -5,7 +5,7 @@ class Student(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     school = models.ForeignKey('School', on_delete=models.CASCADE, related_name='students', null=True, blank=True)
     grade = models.IntegerField(blank=True, null=True)
-    classroom = models.ForeignKey('Classroom', on_delete=models.CASCADE, related_name='students', null=True, blank=True)
+    classrooms = models.ManyToManyField('Classroom', related_name='students')
 
     @property
     def full_name(self):
