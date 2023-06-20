@@ -84,7 +84,7 @@ class QuizView(ViewSet):
     def assign(self, request, pk):
         assignment = StudentQuiz.objects.create(
             quiz_id = pk,
-            student_id = request.data['student_id'],
+            student_id = request.data['studentId'],
             date_assigned = timezone.now()
         )
         serializer = CreateStudentQuizSerializer(assignment)

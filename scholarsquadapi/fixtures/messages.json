@@ -1,0 +1,15 @@
+
+[
+    {
+        "model": "scholarsquadapi.message",
+        "pk": 1,
+        "fields": {
+            "recipient": 8,
+            "sender": 5,
+            "subject": "This week's test",
+            "body": "Hi Ms. Cornett. I know that you assigned the vocab test this week. I've been sick with covid and wondered if I could have an extra week's extension?",
+            "sent_date": "2023-06-19",
+            "read_date": null
+        }
+    }
+]

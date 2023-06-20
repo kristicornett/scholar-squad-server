@@ -7,3 +7,4 @@ from .student import Student
 from .studentAnswer import StudentAnswer
 from .studentQuiz import StudentQuiz
 from .teacher import Teacher 
+from .message import Message
