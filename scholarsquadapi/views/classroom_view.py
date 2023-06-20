@@ -77,8 +77,11 @@ class ClassroomView(ViewSet):
 
        
             
-    
-
+class TeacherSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Teacher
+        fields = ('id', 'user', 'full_name')
+        depth = 1
 class StudentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Student
@@ -86,13 +89,13 @@ class StudentSerializer(serializers.ModelSerializer):
         depth = 1
 class ClassroomSerializer(serializers.ModelSerializer):
     students = StudentSerializer(many=True)
-
+    teacher = TeacherSerializer()
     class Meta:
         model = Classroom
-        fields = ('id', 'name', 'school', 'teacher', 'students', 'quizzes')
+        fields = ('id', 'name', 'description', 'roomNumber', 'school', 'teacher', 'students', 'quizzes')
         depth = 2
 
 class CreateClassSerializer(serializers.ModelSerializer):
     class Meta:
         model = Classroom
-        fields = ['id', 'name', 'school', 'teacher']
+        fields = ['id', 'name', 'school', 'teacher', 'description', 'roomNumber']

@@ -2,8 +2,10 @@ from django.http import HttpResponseServerError
 from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from rest_framework import serializers, status
-from scholarsquadapi.models import Quiz, Teacher, Student, Question, Answer
+from scholarsquadapi.models import Quiz, Teacher, Student, Question, Answer, Classroom, StudentQuiz
 from django.contrib.auth.models import User
+from django.utils import timezone
+from rest_framework.decorators import action
 
 class QuizView(ViewSet):
 
@@ -34,8 +36,14 @@ class QuizView(ViewSet):
             start_date=request.data['start_date'],
             expire_date=request.data['expire_date']
             
-
         )
+
+        classroom_id=request.data['classroom_id']
+        classroom = Classroom.objects.get(pk=classroom_id)
+        if(classroom is not None):
+            quiz.classroom = classroom
+            quiz.save()
+
         for question in questions:
             newQuestion = Question.objects.create(
                 question = question['question'],
@@ -70,6 +78,24 @@ class QuizView(ViewSet):
         quiz = Quiz.objects.get(pk=pk)
         quiz.delete()
         return Response(None, status=status.HTTP_204_NO_CONTENT)
+    
+    #using Now was saying no timezon on serializing, so using timezone instead
+    @action(methods=['POST'], detail=True, url_path='assign')
+    def assign(self, request, pk):
+        assignment = StudentQuiz.objects.create(
+            quiz_id = pk,
+            student_id = request.data['student_id'],
+            date_assigned = timezone.now()
+        )
+        serializer = CreateStudentQuizSerializer(assignment)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    
+    @action(methods=['GET'], detail=True, url_path='assignees')
+    def assignees(self, request, pk):
+        studentQuizzes = StudentQuiz.objects.filter(quiz_id=pk)
+        serializer = StudentQuizAssigneesSerializer(studentQuizzes, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
 
         
 class AnswerSerializer(serializers.ModelSerializer):
@@ -87,7 +113,13 @@ class QuizSerializer(serializers.ModelSerializer):
     questions = QuestionSerializer(many=True)
     class Meta:
         model = Quiz
-        fields = ('id', 'title', 'created_by', 'description', 'start_date', 'expire_date', 'questions')
+        fields = ('id', 'title', 'created_by', 'description', 'start_date', 'expire_date', 'questions', "classroom")
+        depth=1
+    
+class CreateStudentQuizSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = StudentQuiz
+        fields = ('id', 'quiz','student', 'date_assigned')
 
 class CreateQuizSerializer(serializers.ModelSerializer):
     class Meta:
@@ -101,3 +133,14 @@ class CreateQuizSerializer(serializers.ModelSerializer):
             'expire_date'
         )
         depth = 1
+
+class StudentQuizAssigneesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = StudentQuiz
+        fields = (
+            "id",
+            "date_assigned",
+            "date_completed",
+            "student"
+        )
+        depth=2

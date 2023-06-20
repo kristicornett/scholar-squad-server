@@ -17,7 +17,10 @@ def login_user(request):
     email = request.data['username']
     password = request.data['password']
     teacher_id = None
+    student_id = None
+    isAdmin = False
     authenticated_user = authenticate(username=email, password=password)
+
 
     if authenticated_user is not None:
         token = Token.objects.get(user=authenticated_user)
@@ -26,6 +29,14 @@ def login_user(request):
             teacher = Teacher.objects.get(user_id = authenticated_user.id)
             if(teacher is not None):
                 teacher_id = teacher.id
+        elif(authenticated_user.is_superuser):
+            isAdmin = True
+        else:
+            student = Student.objects.get(user_id = authenticated_user.id)
+            if(student is not None):
+                student_id = student.id
+                
+
 
         data = {
             'valid': True,
@@ -33,8 +44,9 @@ def login_user(request):
             'user': {
                 'isStaff': authenticated_user.is_staff,
                 'id': authenticated_user.id,
-                'isAdmin': authenticated_user.is_superuser,
-                'teacherId': teacher_id
+                'isAdmin': isAdmin,
+                'teacherId': teacher_id,
+                'studentId': student_id
             }
         }
         return Response(data)

@@ -68,8 +68,8 @@ class TeacherView(ViewSet):
         
     @action(methods=['GET'], detail=True, url_path='classrooms')
     def getClassrooms(self, request, pk):
-        classrooms = Classroom.objects.filter(teacher_id=pk)
-        serializer = TeacherClassroomSerializer(classrooms, many=True)
+        teacher = Teacher.objects.get(pk=pk)
+        serializer = TeacherClassroomSerializer(teacher.classrooms, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
     
     def destroy(self, request, pk):
@@ -88,7 +88,7 @@ class TeacherSerializer(serializers.ModelSerializer):
     user = UserSerializer(many=False)
     class Meta:
         model = Teacher
-        fields = ('id', 'user', 'school', 'classroom', 'full_name')
+        fields = ('id', 'user', 'school', 'classrooms', 'full_name')
         depth = 1
 
 class CreateTeacherSerializer(serializers.ModelSerializer):
@@ -97,8 +97,7 @@ class CreateTeacherSerializer(serializers.ModelSerializer):
         fields = ('id', 'full_name', 'user')
 
 class TeacherClassroomSerializer(serializers.ModelSerializer):
-    teacher = TeacherSerializer(many=False)
     class Meta:
         model = Classroom
-        fields = ['id', 'name', 'school', 'teacher', 'students']
+        fields = ['id', 'name', 'roomNumber', 'description', 'school', 'students']
         depth = 1

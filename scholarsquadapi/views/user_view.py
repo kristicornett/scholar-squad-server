@@ -11,6 +11,11 @@ class UserView(ViewSet):
         serializer = UserSerializer(users, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
      
+     def retrieve(self, request, pk=None):
+        u = User.objects.get(pk=pk)
+        serialized= UserSerializer(u)
+        return Response(serialized.data, status=status.HTTP_200_OK)
+
      def create(self, request):
         user = User.objects.create(
             first_name=request.data['first_name'],

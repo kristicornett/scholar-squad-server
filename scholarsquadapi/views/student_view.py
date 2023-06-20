@@ -3,8 +3,9 @@ from django.http import HttpResponseServerError
 from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from rest_framework import serializers, status
-from scholarsquadapi.models import Student, School
+from scholarsquadapi.models import Student, School, Classroom, StudentQuiz
 from django.contrib.auth.models import User
+from rest_framework.decorators import action
 
 class StudentView(ViewSet):
     def list(self, request):
@@ -77,6 +78,18 @@ class StudentView(ViewSet):
         student = Student.objects.get(pk=pk)
         student.delete()
         return Response(None, status=status.HTTP_204_NO_CONTENT)
+    
+    @action(methods=['GET'], detail=True, url_path='classrooms')
+    def getClassrooms(self, request, pk):
+        student = Student.objects.get(pk=pk)
+        serializer = StudentClassroomSerializer(student.classrooms, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    @action(methods=['GET'], detail=True, url_path='quizzes')
+    def getQuizzes(self, request, pk):
+        quizzes = StudentQuiz.objects.filter(student_id=pk)
+        serializer = StudentQuizSerializer(quizzes, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 class StudentSerializer(serializers.ModelSerializer):
     class Meta:
@@ -88,3 +101,20 @@ class CreateStudentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Student
         fields = ['id', 'user', 'school', 'grade', 'full_name',]
+        
+class StudentClassroomSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Classroom
+        fields = ['id', 'name', 'roomNumber', 'description', 'school', 'students']
+        depth = 1
+
+class StudentQuizSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = StudentQuiz
+        fields = (
+            "id",
+            "date_assigned",
+            "date_completed",
+            "quiz"
+        )
+        depth=4
