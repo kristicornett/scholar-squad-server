@@ -96,6 +96,15 @@ class QuizView(ViewSet):
         serializer = StudentQuizAssigneesSerializer(studentQuizzes, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+    @action(methods=['GET'], detail=True, url_path='assigned')
+    def get_assigned_quiz(self, request, pk):
+        student = Student.objects.get(user=request.auth.user)
+        squiz = StudentQuiz.objects.get(quiz_id=pk, student_id=student.id)
+        if squiz is not None:
+            serializer = StudentQuizSerializer(squiz)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response(None, status=status.HTTP_400_BAD_REQUEST)
 
         
 class AnswerSerializer(serializers.ModelSerializer):
@@ -133,6 +142,18 @@ class CreateQuizSerializer(serializers.ModelSerializer):
             'expire_date'
         )
         depth = 1
+
+class StudentQuizSerializer(serializers.ModelSerializer):
+    quiz = QuizSerializer()
+    class Meta:
+        model = StudentQuiz
+        fields = (
+            "id",
+            "date_assigned",
+            "date_completed",
+            "quiz"
+        )
+        depth=1 
 
 class StudentQuizAssigneesSerializer(serializers.ModelSerializer):
     class Meta:
