@@ -3,7 +3,7 @@ from django.http import HttpResponseServerError
 from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from rest_framework import serializers, status
-from scholarsquadapi.models import Student, School, Classroom, StudentQuiz
+from scholarsquadapi.models import Student, School, Classroom, StudentQuiz, Answer, Question, Quiz
 from django.contrib.auth.models import User
 from rest_framework.decorators import action
 
@@ -91,6 +91,24 @@ class StudentView(ViewSet):
         serializer = StudentQuizSerializer(quizzes, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+class AnswerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Answer
+        fields = ('id', 'isCorrect', 'answer')
+
+class QuestionSerializer(serializers.ModelSerializer):
+    answers = AnswerSerializer(many=True)
+    class Meta:
+        model = Question
+        fields = ('id', 'question', 'answers')
+
+class QuizSerializer(serializers.ModelSerializer):
+    questions = QuestionSerializer(many=True)
+    class Meta:
+        model = Quiz
+        fields = ('id', 'title', 'created_by', 'description', 'start_date', 'expire_date', 'questions', "classroom")
+        depth=1
+
 class StudentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Student
@@ -109,6 +127,7 @@ class StudentClassroomSerializer(serializers.ModelSerializer):
         depth = 1
 
 class StudentQuizSerializer(serializers.ModelSerializer):
+    quiz = QuizSerializer()
     class Meta:
         model = StudentQuiz
         fields = (

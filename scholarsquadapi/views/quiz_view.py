@@ -2,7 +2,7 @@ from django.http import HttpResponseServerError
 from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from rest_framework import serializers, status
-from scholarsquadapi.models import Quiz, Teacher, Student, Question, Answer, Classroom, StudentQuiz
+from scholarsquadapi.models import Quiz, Teacher, Student, Question, Answer, Classroom, StudentQuiz, StudentAnswer
 from django.contrib.auth.models import User
 from django.utils import timezone
 from rest_framework.decorators import action
@@ -79,7 +79,7 @@ class QuizView(ViewSet):
         quiz.delete()
         return Response(None, status=status.HTTP_204_NO_CONTENT)
     
-    #using Now was saying no timezon on serializing, so using timezone instead
+    #using Now was saying no timezone on serializing, so using timezone instead
     @action(methods=['POST'], detail=True, url_path='assign')
     def assign(self, request, pk):
         assignment = StudentQuiz.objects.create(
@@ -88,7 +88,25 @@ class QuizView(ViewSet):
             date_assigned = timezone.now()
         )
         serializer = CreateStudentQuizSerializer(assignment)
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
+    @action(methods=['POST'], detail=True, url_path='submit')
+    def submit(self, request, pk):
+        studentQuiz = StudentQuiz.objects.get(quiz_id=pk, student_id=request.data['studentId'])
+        studentQuiz.date_completed = timezone.now()
+        answers = request.data["answers"]
+        for answer in answers:
+            StudentAnswer.objects.create(
+                quiz_id = studentQuiz.quiz_id,
+                student_quiz = studentQuiz,
+                answer_id = answer['answer_id'],
+                question_id = answer['question_id']
+            )
+        
+        studentQuiz.save()
+        serializer = StudentQuizSerializer(studentQuiz)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
     
     @action(methods=['GET'], detail=True, url_path='assignees')
     def assignees(self, request, pk):

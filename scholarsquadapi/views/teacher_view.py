@@ -82,7 +82,7 @@ class TeacherView(ViewSet):
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('id', 'first_name', 'last_name', 'password', 'is_staff')
+        fields = ('id', 'first_name', 'last_name', 'password', 'is_staff', 'email', 'username')
 
 class TeacherSerializer(serializers.ModelSerializer):
     user = UserSerializer(many=False)
