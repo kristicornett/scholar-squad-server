@@ -134,6 +134,7 @@ class StudentQuizSerializer(serializers.ModelSerializer):
             "id",
             "date_assigned",
             "date_completed",
-            "quiz"
+            "quiz",
+            "score"
         )
         depth=4

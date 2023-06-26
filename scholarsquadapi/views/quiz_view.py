@@ -95,6 +95,9 @@ class QuizView(ViewSet):
         studentQuiz = StudentQuiz.objects.get(quiz_id=pk, student_id=request.data['studentId'])
         studentQuiz.date_completed = timezone.now()
         answers = request.data["answers"]
+
+        totalCorrect = 0
+        totalQuestions = len(answers)
         for answer in answers:
             StudentAnswer.objects.create(
                 quiz_id = studentQuiz.quiz_id,
@@ -102,6 +105,14 @@ class QuizView(ViewSet):
                 answer_id = answer['answer_id'],
                 question_id = answer['question_id']
             )
+           
+        for answer in answers:
+            correctAnswer = Answer.objects.get(question_id=answer['question_id'], isCorrect=True)
+            if answer['answer_id'] == correctAnswer.id:
+                totalCorrect += 1
+        score = (totalCorrect /totalQuestions) * 100
+        
+        studentQuiz.score = score
         
         studentQuiz.save()
         serializer = StudentQuizSerializer(studentQuiz)
