@@ -152,7 +152,7 @@ class QuizSerializer(serializers.ModelSerializer):
     class Meta:
         model = Quiz
         fields = ('id', 'title', 'created_by', 'description', 'start_date', 'expire_date', 'questions', "classroom")
-        depth=1
+        depth=2
     
 class CreateStudentQuizSerializer(serializers.ModelSerializer):
     class Meta:
@@ -180,7 +180,9 @@ class StudentQuizSerializer(serializers.ModelSerializer):
             "id",
             "date_assigned",
             "date_completed",
-            "quiz"
+            "quiz",
+            "score",
+            "student_answer"
         )
         depth=1 
 

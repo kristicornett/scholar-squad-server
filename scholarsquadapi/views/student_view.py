@@ -87,8 +87,19 @@ class StudentView(ViewSet):
 
     @action(methods=['GET'], detail=True, url_path='quizzes')
     def getQuizzes(self, request, pk):
-        quizzes = StudentQuiz.objects.filter(student_id=pk)
-        serializer = StudentQuizSerializer(quizzes, many=True)
+        quiz_id = request.query_params.get("quiz_id")
+
+        if (quiz_id is not None):
+            quizzes = StudentQuiz.objects.filter(student_id=pk, quiz_id=quiz_id)
+            if len(quizzes) == 1:
+                serializer = StudentQuizSerializer(quizzes[0])
+            else:
+                return Response({"message": "Quiz not found"}, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            quizzes = StudentQuiz.objects.filter(student_id=pk)
+            serializer = StudentQuizSerializer(quizzes, many=True)
+
+        
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 class AnswerSerializer(serializers.ModelSerializer):
